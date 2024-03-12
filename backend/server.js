@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 const router = require("./routes/user_routes.js");
 
 const app = express();
-
+app.use(express.json());
 app.use('/api', router);
+app.use(cors());
 
 mongoose.connect("mongodb+srv://admin:k19F8kCpZphoDijn@cluster0.hubtpxn.mongodb.net/jwt_aa?retryWrites=true&w=majority&appName=Cluster0")
     .then(() => {
@@ -14,8 +15,6 @@ mongoose.connect("mongodb+srv://admin:k19F8kCpZphoDijn@cluster0.hubtpxn.mongodb.
     })
     .catch((err) => console.log(err));
 
-app.use(cors());
-app.use(express.json);
 
 
 
