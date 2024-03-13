@@ -1,5 +1,7 @@
 const User = require('../model/User.js');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const JWT_SECRET_KEY = "MyKey";
 
 module.exports.signup = async function (req, res, next) {
     const { name, email, password } = req.body;
@@ -46,7 +48,11 @@ module.exports.login = async function (req, res, next) {
     if (!isPasswordCorrect) {
         return res.status(401).json({ message: 'Invalid Password' })
     }
-    return res.status(200).json({ message: 'Successfully Logged In' })
-}
+    const token = jwt.sign({ id: existingUser._id }, JWT_SECRET_KEY, {
+        expiresIn: "1hr"
+    });
+
+    return res.status(200).json({ message: 'Successfully Logged In', user: existingUser, token })
+};
 
 
