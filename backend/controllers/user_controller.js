@@ -1,7 +1,8 @@
 const User = require('../model/User.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const JWT_SECRET_KEY = "MyKey";
+require('dotenv').config();
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 module.exports.signup = async function (req, res, next) {
     const { name, email, password } = req.body;
@@ -54,5 +55,24 @@ module.exports.login = async function (req, res, next) {
 
     return res.status(200).json({ message: 'Successfully Logged In', user: existingUser, token })
 };
+
+module.exports.verifyToken = function (req, res, next) {
+    const headers = req.headers[`authorization`];
+    const token = headers.split(" ")[1];
+    if (!token) {
+        res.status(404).json({ message: "No token found" })
+    }
+    jwt.verify(String(token), JWT_SECRET_KEY, function (err, user) {
+        if (err) {
+            return res.status(400).json({ message: "Invalid Token" });
+        }
+        console.log(user.id);
+    });
+
+    return res.status(200).json({message: "Token validated"});
+};
+
+
+
 
 
