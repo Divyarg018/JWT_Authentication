@@ -6,8 +6,9 @@ dotenv.config({ path: '../.env' });
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 function verifyToken(req, res, next) {
-    const headers = req.headers[`authorization`];
-    const token = headers.split(" ")[1];
+    const cookies = req.headers.cookie;
+    const token = cookies.split("=")[1];
+    console.log(token);
     if (!token) {
         res.status(404).json({ message: "No token found" })
     }

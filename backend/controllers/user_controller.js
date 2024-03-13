@@ -50,8 +50,15 @@ module.exports.login = async function (req, res, next) {
         return res.status(401).json({ message: 'Invalid Password' })
     }
     const token = jwt.sign({ id: existingUser._id }, JWT_SECRET_KEY, {
-        expiresIn: "1hr"
+        expiresIn: "30s"
     });
+
+    res.cookie(String(existingUser._id), token, {
+        path: '/',
+        expires: new Date(Date.now() + 1000 * 30),
+        httpOnly: true,
+        sameSite: 'lax'
+    })
 
     return res.status(200).json({ message: 'Successfully Logged In', user: existingUser, token })
 };
@@ -71,7 +78,7 @@ module.exports.getUser = async function (req, res) {
     if (!user) {
         return res.status(404).json({ message: "User not found" })
     }
-    return res.status(200).json({user})
+    return res.status(200).json({ user })
 }
 
 
