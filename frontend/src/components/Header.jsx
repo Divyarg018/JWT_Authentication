@@ -5,7 +5,7 @@ function Header() {
     const [value, setValue] = useState();
     return (
         <div>
-            <AppBar>
+            <AppBar position='sticky'>
                 <Toolbar>
                     <Typography variant='h3'>MernAuth</Typography>
                     <Box sx={{ marginLeft: "auto" }}>
