@@ -5,8 +5,11 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Welcome from "./components/Welcome";
+import { useSelector } from "react-redux";
 
 function App() {
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  console.log(isLoggedIn);
   return (
     <React.Fragment>
       <header>

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { AppBar, Box, Tab, Tabs, Toolbar, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function Header() {
+    const isLoggedIn = useSelector(state => state.isLoggedIn)
     const [value, setValue] = useState();
     return (
         <div>
@@ -18,6 +20,7 @@ function Header() {
                         >
                             <Tab to="/login" LinkComponent={Link} label="Login" />
                             <Tab to="/signup" LinkComponent={Link} label="Signup" />
+                            {isLoggedIn && <Tab to="/" LinkComponent={Link} label="Logout" />}
                         </Tabs>
                     </Box>
                 </Toolbar>

@@ -55,7 +55,7 @@ module.exports.login = async function (req, res, next) {
 
     console.log("Generated Token\n", token);
 
-    if(req.cookies[`${existingUser._id}`]){
+    if (req.cookies[`${existingUser._id}`]) {
         req.cookies[`${existingUser._id}`] = ""
     }
 
