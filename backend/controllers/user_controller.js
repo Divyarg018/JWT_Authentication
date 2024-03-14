@@ -50,8 +50,14 @@ module.exports.login = async function (req, res, next) {
         return res.status(401).json({ message: 'Invalid Password' })
     }
     const token = jwt.sign({ id: existingUser._id }, JWT_SECRET_KEY, {
-        expiresIn: "30s"
+        expiresIn: "35s"
     });
+
+    console.log("Generated Token\n", token);
+
+    if(req.cookies[`${existingUser._id}`]){
+        req.cookies[`${existingUser._id}`] = ""
+    }
 
     res.cookie(String(existingUser._id), token, {
         path: '/',

@@ -2,8 +2,18 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 axios.defaults.withCredentials = true
 
+let firstRender = true;
 function Welcome() {
     const [user, setUser] = useState();
+
+    async function refreshToken() {
+        const res = await axios.get("http://localhost:5000/api/refresh", {
+            withCredentials: true
+        }).catch(err => console.log(err))
+
+        const data = await res.data;
+        return data;
+    }
     async function sendRequest() {
         try {
             const res = await axios.get('http://localhost:5000/api/user', {
@@ -20,9 +30,16 @@ function Welcome() {
             return null;
         }
     }
-    
+
     useEffect(() => {
-        sendRequest().then((data) => setUser(data.user))
+        if (firstRender) {
+            sendRequest().then((data) => setUser(data.user));
+        }
+        let interval = setInterval(() => {
+            refreshToken().then(data => setUser(data.user));
+        }, 1000 * 29)
+
+        return () => clearInterval(interval)
     }, [])
     return (
         <div>
