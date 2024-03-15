@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
 import { AppBar, Box, Tab, Tabs, Toolbar, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from "axios";
+axios.defaults.withCredentials = true
 
 function Header() {
-    const isLoggedIn = useSelector(state => state.isLoggedIn)
+    const dispatch = useDispatch();
+    const isLoggedIn = useSelector(state => state.isLoggedIn);
+    const sendLogoutReq = async () => {
+        const res = await axios.post("http://localhost:5000/api/logout", null, {
+            withCredentials: true
+        });
+        if (res.status == 200) {
+            return res
+        }
+        return new Error("Unable To Logout. Please try again")
+    }
+    const handleLogout = () => {
+        sendLogoutReq().then(() => dispatch(authActions.logout()))
+    }
     const [value, setValue] = useState();
     return (
         <div>
@@ -18,9 +33,11 @@ function Header() {
                             value={value}
                             textColor='inherit'
                         >
-                            <Tab to="/login" LinkComponent={Link} label="Login" />
-                            <Tab to="/signup" LinkComponent={Link} label="Signup" />
-                            {isLoggedIn && <Tab to="/" LinkComponent={Link} label="Logout" />}
+                            {!isLoggedIn && <> <Tab to="/login" LinkComponent={Link} label="Login" />
+                                <Tab to="/signup" LinkComponent={Link} label="Signup" /></>}
+                            {isLoggedIn && (
+                                <Tab onClick={handleLogout} to="/" LinkComponent={Link} label="Logout" />
+                            )}{" "}
                         </Tabs>
                     </Box>
                 </Toolbar>

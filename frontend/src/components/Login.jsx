@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Login() {
+    const dispatch = useDispatch();
     const history = useNavigate();
     const [inputs, setInputs] = useState({
         email: "",
@@ -29,7 +30,8 @@ function Login() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        sendRequest().then(() => history("/user"));
+        sendRequest().then(() => dispatch(authActions.login()))
+            .then(() => history("/user"));
     };
     return (
         <div>
